@@ -31,11 +31,15 @@ Using the user activity data and product information metadata we can do churn an
 
 ## ETL Process
 
-create_tables.py 
+__create_tables.py__ is used to create the necessary tables in Amazon Redshift database.
+1. Create staging tables for events and products.
+2. Create Events and Products and Time tables for final datastore after data cleaning.  
 
-etl.py file is used to implement the ETL process
-1. __Song Metadata__ files from Amazon S3 data store are fed to __staging_events__ table in AWS Redshift database using COPY command. The data is thereafter cleaned and type casted to proper columns in __Songs__ and __Artists__ tables.
-2. __User Activity log__ files from Amazon S3 data store are fed to __staging_songs__ table in AWS Redshift database using COPY command. The data is thereafter cleaned and type casted to proper columns in __Songplays__, __Users__ and __Time__ tables.
+
+__etl.py__ file is used to implement the ETL process
+1. __Product Metadata__ files from Amazon S3 data store are fed to __staging_products__ table in AWS Redshift database using COPY command. The data is thereafter cleaned and type casted to proper columns in __Products__ tables.
+2. __User Activity log__ files from Amazon S3 data store are fed to __staging_events__ table in AWS Redshift database using COPY command. The data is thereafter cleaned and type casted to proper columns in __Events__ and __Time__ tables.
+3. __trainingChurn__ table is created using data aggregation of __Events__ and __Product__ tables on a user level. This table is contains a labeled dataset for churned users(Current Project) and user purchases(Future project). The query is parameterized to control the _Churn evaluation date_ and _evalation time period_. The table also contains new features engineered from the user activity and user purchases during the _parameterized timeframe_.
 
 ![ETL](/images/ETL.PNG)
 
