@@ -48,9 +48,11 @@ Required SQL queries are saved in sql_queries.py file.
 
 ## Defining Churn and Feature Engineering
 
-The first step before modeling the data is to define churn in a meaningful way w.r.t. business requirement. Here we have defined that teh users have churned if _the user who had any activity within a stipulated period of prior months but have no activity within the evaluation month/months_. The definition of churn can vary based on the evaluation timeframe and therefore the time periods have to be parameterized inorder to accomadate changing business requirement. __Note: As a default, prior months is taken as 3 months and the churn evaluation timeperiod is taken as 1 month__
+The __first step__ before modeling the data is to define churn in a meaningful way w.r.t. business requirement. Here we have defined that teh users have churned if 
+_"the user who had any activity within a stipulated period of prior months but have no activity within the evaluation month/months"_.
+The definition of churn can vary based on the evaluation timeframe and therefore the time periods have to be parameterized inorder to accomadate changing business requirement. __Note: As a default, prior months is taken as 3 months and the churn evaluation timeperiod is taken as 1 month__
 
-The second step is to engineer relevant features to address the prediction problem at hand. The raw event logs provides transactions snippets of information about the customer preferences and activity within the site. For the _churn problem_, I have envision three major types of features.
+The __second step__ is to engineer relevant features to address the prediction problem at hand. The raw event logs provides transactions snippets of information about the customer preferences and activity within the site. For the _churn problem_, I have envision three major types of features.
 
 1. __Basic Activity features__ :  These features are created from aggregating user activity for the last stipulated period of time(say 3 months). These features captures the activity of the user during a certain period of time and therefore can help in distinguishing loyal and active users from rest. This involves data about the number of visits, number of purchases, total purchase amount etc.
 
@@ -68,18 +70,7 @@ Find below the complete list of features (Note: All features are created for a s
 
 2. __Trend Activity features__ :  These features are created from aggregating user activity for the most recent time period(say 1 months). These features capture the trend of user activity in the recent past. This involves data about the number of visits, number of purchases, total purchase amount etc.
 
-Find below the complete list of features (Note: All features are for most recent period):
-- nb_visits : Number of user activity
-- nb_purchase : Number of user purchases
-- amount_purchase : Amount purchased
-- nb_products_seen : Number of products seen by user
-- nb__distinct_products : number of distinct products seen by user
-- nb_distinct_category0 : number of distinct categories seen by user
-- nb_distinct_category1 : number of distinct sub-categories seen by user 
-- nb_distinct_category2 : number of distinct sub-categories seen by user
-- nb_distinct_product_purchased : number of distinct products purchased by user 
-- nb_distinct_category_purchased : number of distinct categories purchased by user 
-
+The features are same as the __Basic Activity Features__ but with a limited scope.
 
 3. __Global Activity features__ : These features are created from aggregating user activity for the entire association with the website. It captures the overall activity of the user from the start.
 
@@ -91,6 +82,19 @@ Find below the complete list of features:
 - nb_active_purchase_months : Number of months with purchases in site
 - nb_purchase_total : Number of purchases for entire user activity
 - amount_purchase_total : Total purchase amount for entire user activity
+
+## Exploratory Data Analysis
+#### Handling Missing Value
+The training dataset has high degree of missing value due to its design. For e.g., if there is no user activity in the most recent month, the trend features will not have any data. Understanding this reason for missing values gives as insight into how to impute the value.
+- For number/purchase amount features with missing value, the most probable reason is no activity/ no purchase during the stipulated time.
+- nb_days_last_purchase will be missing for users who never purchased from the site, we can impute this vare with a very high value(say 99999) to categories these users differently from rest.
+
+#### Feature correlation
+Some features can be highly correlated with each other causing instability while building predictive model. Correlations can be visualized using correlation plots as given below.
+
+![Correlation plot](/images/correlation.PNG)
+
+
 
 
 
