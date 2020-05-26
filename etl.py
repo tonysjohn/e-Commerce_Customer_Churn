@@ -17,8 +17,8 @@ def insert_tables(cur, conn):
         cur.execute(query)
         conn.commit()
 
-def analysis_tables(cur, conn, churnDate):
-    query = training_Churn(churnDate)
+def analysis_tables(cur, conn, churnDate,preInterval = 4, churnEvaluationPeriod = 3):
+    query = training_Churn(churnDate, preInterval = preInterval, churnEvaluationPeriod = churnEvaluationPeriod)
     cur.execute(query)
     conn.commit()
 

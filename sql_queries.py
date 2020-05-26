@@ -303,15 +303,15 @@ def training_Churn(finalChurnDate, preInterval = 3, churnEvaluationPeriod = 1):
               NVL(nb_distinct_product_purchased_last_month,0) as nb_distinct_product_purchased_last_month,
               NVL(nb_distinct_category_purchased_last_month,0) as nb_distinct_category_purchased_last_month,
               DATEDIFF(month, first_activity_date,last_activity_date) as nb_associated_months,
-              DATEDIFF(day, last_activity_date, '{finalChurnDate}') as nb_days_last_activity,
-              NVL(DATEDIFF(day, last_purchase_date, '{finalChurnDate}'),99999) as nb_days_last_purchase,
+              DATEDIFF(day, last_activity_date, TIMESTAMP '{finalChurnDate}'- INTERVAL '{churnEvaluationPeriod} months') as nb_days_last_activity,
+              NVL(DATEDIFF(day, last_purchase_date, TIMESTAMP '{finalChurnDate}'- INTERVAL '{churnEvaluationPeriod} months'),99999) as nb_days_last_purchase,
               nb_active_months,
               nb_active_purchase_months,
               nb_purchase_total,
               NVL(amount_purchase_total,0) as amount_purchase_total,
-              CASE WHEN current_month.user_id IS NULL THEN 0 ELSE 1 END as visit_current_month,
-              NVL(current_month_purchase,0) as current_month_purchase,
-              CASE WHEN current_month_purchase > 0 THEN 1 ELSE 0 END as purchase_current_month
+              CASE WHEN current_month.user_id IS NULL THEN 1 ELSE 0 END as no_activity_evaluation_period,
+              NVL(current_month_purchase,0) as amount_purchase_evaluation_period,
+              CASE WHEN current_month_purchase > 0 THEN 0 ELSE 1 END as no_purchase_evaluation_period
        INTO trainingChurn
        FROM
        (SELECT 

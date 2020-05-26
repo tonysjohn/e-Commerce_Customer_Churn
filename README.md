@@ -94,7 +94,59 @@ Some features can be highly correlated with each other causing instability while
 
 ![Correlation plot](/images/correlation.PNG)
 
+As seen in the correlation matrix above, there is higher correlation between features of basic category and trend category. Also, number of days from last activity and purchase is found to be negatively correlated with all the features. Intuitively, an active users has more visits/ purchases and will have lower number of days from last visit.
 
+#### Class Balance
+Class imbalance in the dataset can create issues in while modeling the data. The current dataset appears to be fairly balanced.
+
+![Churn Distribution plot](/images/ChurnDistribution.PNG)
+
+#### Feature Importance
+
+Since the categorical output, correlation matrix provides limited information about the actual correlation. A __t-test__ can be performed to ascertain if there is significant difference in data from churn and not-churn users. The following features showed < 0.05% significance. Log transformed data show sigficance, indicating log transformation required for linear - parameteric models
+
+| Var1 | Var2 | tvalue | pvalue |
+| --- | --- | --- | --- |
+| amount_purchase | no_activity_evaluation_period | 1.598413 | 0.109958 |
+| amount_purchase_last_month	no_activity_evaluation_period | 1.004236 | 0.315270 |
+| nb_purchase_total | no_activity_evaluation_period | 1.544840 | 0.122392 |
+| amount_purchase_total | no_activity_evaluation_period | 1.618743 | 0.105510 |
+
+__Box Plots__ provides a nice visual representation of difference in distribution between two groups
+
+![Box plot](/images/boxplot.PNG)
+
+__Tree Based models__ provides feature importance which can be potentially used to filter non informative feature. Find below the feature importance from __Random Forest__ model in the decreasing order 
+
+| Features | Importance|
+| --- | --- |
+| nb_days_last_activity | 0.240502 |
+| nb_associated_months | 0.116341 |
+| nb_active_months | 0.091586 |
+| nb_visits | 0.089490 |
+| nb__distinct_products | 0.080761 |
+| nb_visits_last_month | 0.055770 |
+| nb_products_seen | 0.052468 |
+| nb_distinct_category1 | 0.043871 |
+| nb_distinct_category0 | 0.030447 |
+| nb_days_last_purchase | 0.028630 |
+| amount_purchase_total | 0.024445 |
+| nb_distinct_category2 | 0.022086 |
+| amount_purchase | 0.019904 |
+| nb_distinct_category0_last_month | 0.014828 |
+| nb_products_seen_last_month | 0.013427 |
+| nb_distinct_category2_last_month | 0.012472 |
+| nb_distinct_category1_last_month | 0.012168 |
+| nb__distinct_products_last_month | 0.010156 |
+| nb_active_purchase_months | 0.007856 |
+| amount_purchase_last_month | 0.007436 |
+| nb_purchase_total | 0.007378 |
+| nb_distinct_category_purchased | 0.005344 |
+| nb_purchase | 0.004290 |
+| nb_distinct_product_purchased | 0.003929 |
+| nb_purchase_last_month | 0.001503 |
+| nb_distinct_product_purchased_last_month | 0.001462 |
+| nb_distinct_category_purchased_last_month | 0.001449 |
 
 
 
