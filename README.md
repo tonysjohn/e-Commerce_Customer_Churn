@@ -15,7 +15,7 @@ Below is an example of the data available in csv format from the 800k record dat
 | 1 | 5.0 | 37 | 109 | 7.02 |
 
 #### User Activity Log Dataset
-The second dataset consists of log od user activity in the website in CSV format. The user interaction is generated when a user visits a "product page", "seller page" or commits a transaction through  a "buy order". The data is assumed to be loaded in Amazon S3 data lake store within approriate folder taxonomy.
+The second dataset consists of user activity logs in the website in CSV format. The user interaction is generated when a user visits a "product page", "seller page" or commits a transaction through  a "buy order". The data is assumed to be loaded in Amazon S3 data lake store within approriate folder taxonomy.
 
 Below is an example of the data available in csv format from the 3M record dataset.
 
@@ -24,12 +24,14 @@ Below is an example of the data available in csv format from the 3M record datas
 | 53189 | 2014-09-08 22:00:00 | product_page | 399135 | 118464.0 |
 | 23481 | 2014-09-08 14:00:00 | seller_page |  | 255.0 |
 
-## Schema for Data Warehouse
-Using the song and log datasets, you'll need to create a star schema optimized for queries on song play analysis. This includes the following tables.
+## Schema for Database
+Using the user activity data and product information metadata we can do churn analysis. This includes the following tables.
 
 ![Schema Diagram](/images/schema.PNG)
 
 ## ETL Process
+
+create_tables.py 
 
 etl.py file is used to implement the ETL process
 1. __Song Metadata__ files from Amazon S3 data store are fed to __staging_events__ table in AWS Redshift database using COPY command. The data is thereafter cleaned and type casted to proper columns in __Songs__ and __Artists__ tables.
