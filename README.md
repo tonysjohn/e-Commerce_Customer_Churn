@@ -40,7 +40,7 @@ __etl.py__ file is used to implement the ETL process
 1. __Product Metadata__ files from Amazon S3 data store are fed to __staging_products__ table in AWS Redshift database using COPY command. The data is thereafter cleaned and type casted to proper columns in __Products__ tables.
 2. __User Activity log__ files from Amazon S3 data store are fed to __staging_events__ table in AWS Redshift database using COPY command. The data is thereafter cleaned and type casted to proper columns in __Events__ and __Time__ tables.
 3. __trainingChurn__ table is created using data aggregation of __Events__ and __Product__ tables on a user level. This table is contains a labeled dataset for churned users(Current Project) and user purchases(Future project). The query is parameterized to control the _Churn evaluation date_ and _evalation time period_. The table also contains new features engineered from the user activity and user purchases during the _parameterized timeframe_.
-4. __predictionChurn__ table provides churn prediction for future months in a rolling basis. It provides an important basis for evalution of the model in production enviornment. (Note: Solutioning pending....)
+4. __predictionChurn__ table provides churn prediction for future months in a rolling basis. It provides an important basis for evalution of the model in production enviornment. _(Note: Solutioning pending....)_
 
 ![ETL](/images/ETL.PNG)
 
@@ -108,7 +108,7 @@ Since the categorical output, correlation matrix provides limited information ab
 | Var1 | Var2 | tvalue | pvalue |
 | --- | --- | --- | --- |
 | amount_purchase | no_activity_evaluation_period | 1.598413 | 0.109958 |
-| amount_purchase_last_month	no_activity_evaluation_period | 1.004236 | 0.315270 |
+| amount_purchase_last_month | no_activity_evaluation_period | 1.004236 | 0.315270 |
 | nb_purchase_total | no_activity_evaluation_period | 1.544840 | 0.122392 |
 | amount_purchase_total | no_activity_evaluation_period | 1.618743 | 0.105510 |
 
@@ -147,6 +147,26 @@ __Tree Based models__ provides feature importance which can be potentially used 
 | nb_purchase_last_month | 0.001503 |
 | nb_distinct_product_purchased_last_month | 0.001462 |
 | nb_distinct_category_purchased_last_month | 0.001449 |
+
+## Modeling
+#### Logistic Regression Model
+A vanilla logistic regression model is found to perform poorly on the data. This is as expected due to the strong assumptions behind a linear model. As seen in EDA, we need to perform feature transformations and analyze interactions in data to properly tune the model. _(Note: Solutioning pending....)_
+
+#### Tree Based Models
+Tree based models like Random Forest and Tree based boosting models like AdaBoost, XgBoost is found to be much better than logistic model.
+
+#### Hyperparameter Tuning
+Hyperparameter tuning is performed using 5-fold Cross Validation. Note: Only Adaboost model hyperparameters have been tuned 
+
+#### Results
+The XgBoost model is found to have the highest accuracy of 79.30% and high recall of 89.70%. 
+
+| Model | TN | FP | FN | TP | Accuracy | Recall | Precision | AUC |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | 
+| Logistic Regression | 586 | 2699 | 134 | 5451 | 68.06% | 97.60% | 66.88% | 0.577 |
+| Random Forest | 2096 | 1189 | 949 | 4636 | 75.90% | 83.01% | 79.59% | 0.734 |
+| AdaBoost | 2114 | 1171 | 764 | 4821 | 78.18% | 86.32% | 80.46% | 0.753 |
+| XgBoost | 2024 | 1261 | 575 | 5010 | 79.30% | 89.70% | 79.89% | 0.757 |
 
 
 
