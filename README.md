@@ -50,11 +50,11 @@ Required SQL queries are saved in sql_queries.py file.
 
 The __first step__ before modeling the data is to define churn in a meaningful way w.r.t. business requirement. Here we have defined that teh users have churned if 
 _"the user who had any activity within a stipulated period of prior months but have no activity within the evaluation month/months"_.
-The definition of churn can vary based on the evaluation timeframe and therefore the time periods have to be parameterized inorder to accomadate changing business requirement. __Note: As a default, prior months is taken as 3 months and the churn evaluation timeperiod is taken as 1 month__
+The definition of churn can vary based on the evaluation timeframe and therefore the time periods have to be parameterized inorder to accomadate changing business requirement. __Note: As a default, prior months is taken as 4 months and the churn evaluation timeperiod is taken as 3 month__
 
 The __second step__ is to engineer relevant features to address the prediction problem at hand. The raw event logs provides transactions snippets of information about the customer preferences and activity within the site. For the _churn problem_, I have envision three major types of features.
 
-1. __Basic Activity features__ :  These features are created from aggregating user activity for the last stipulated period of time(say 3 months). These features captures the activity of the user during a certain period of time and therefore can help in distinguishing loyal and active users from rest. This involves data about the number of visits, number of purchases, total purchase amount etc.
+1. __Basic Activity features__ :  These features are created from aggregating user activity for the last stipulated period of time(say 4 months). These features captures the activity of the user during a certain period of time and therefore can help in distinguishing loyal and active users from rest. This involves data about the number of visits, number of purchases, total purchase amount etc.
 
 Find below the complete list of features (Note: All features are created for a stipulated time):
 - nb_visits : Number of user activity
@@ -159,7 +159,7 @@ Tree based models like Random Forest and Tree based boosting models like AdaBoos
 Hyperparameter tuning is performed using 5-fold Cross Validation. Note: Only Adaboost model hyperparameters have been tuned 
 
 #### Results
-The XgBoost model is found to have the highest accuracy of 79.30% and high recall of 89.70%. 
+The XgBoost model is found to have the highest accuracy of 79.30% and high recall of 89.70% on test dataset. 
 
 | Model | TN | FP | FN | TP | Accuracy | Recall | Precision | AUC |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | 
@@ -168,7 +168,7 @@ The XgBoost model is found to have the highest accuracy of 79.30% and high recal
 | AdaBoost | 2114 | 1171 | 764 | 4821 | 78.18% | 86.32% | 80.46% | 0.753 |
 | XgBoost | 2024 | 1261 | 575 | 5010 | 79.30% | 89.70% | 79.89% | 0.757 |
 
-
-
+## Deployment and Evaluation
+prediction.py is used to orchestrate monthly prediction in rolling basis. The ML model and necessary configuration are envisoned to be pickled and put in Amazon S3 datastore from which the model can be called when required. _(Note: Solutioning pending....)_
 
 
