@@ -3,6 +3,10 @@ The objective of this project is to implement a end-to-end machine learning proj
 
 The project involves creating of data pipeline to synthesize labels for the purpose of churn identification and developing new features for the raw transactional log. The ingestional pipeline is provisioned using Amazon S3 and Amazon Redshift; the ETL process is orchestrated by python and postgreSQL. The modeling is performed using tree based boosting methods like XgBoost and AdaBoost.
 
+## Project Diagram
+
+![E2E process](/images/E2Eprocess.PNG)
+
 ## Project Datasets
 #### Product Metadata Dataset
 The first dataset is metadata about the products available in the e-commerce website. The file is in csv format and contains metadata about the product main and sub categories and price. The data is assumed to be loaded in Amazon S3 data lake store within approriate folder taxonomy.
