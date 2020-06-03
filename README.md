@@ -3,6 +3,10 @@ The objective of this project is to implement a end-to-end machine learning proj
 
 The project involves creating of data pipeline to synthesize labels for the purpose of churn identification and developing new features for the raw transactional log. The ingestional pipeline is provisioned using Amazon S3 and Amazon Redshift; the ETL process is orchestrated by python and postgreSQL. The modeling is performed using tree based boosting methods like XgBoost and AdaBoost.
 
+## Project Diagram
+
+![E2E process](/images/E2Eprocess.PNG)
+
 ## Project Datasets
 #### Product Metadata Dataset
 The first dataset is metadata about the products available in the e-commerce website. The file is in csv format and contains metadata about the product main and sub categories and price. The data is assumed to be loaded in Amazon S3 data lake store within approriate folder taxonomy.
@@ -49,12 +53,12 @@ Required SQL queries are saved in sql_queries.py file.
 ## Defining Churn and Feature Engineering
 
 The __first step__ before modeling the data is to define churn in a meaningful way w.r.t. business requirement. Here we have defined that teh users have churned if 
-_"the user who had any activity within a stipulated period of prior months but have no activity within the evaluation month/months"_.
-The definition of churn can vary based on the evaluation timeframe and therefore the time periods have to be parameterized inorder to accomadate changing business requirement. __Note: As a default, prior months is taken as 3 months and the churn evaluation timeperiod is taken as 1 month__
+_"the user who had minimum purchase activity within a stipulated period of prior months but have no activity within the evaluation month/months"_.
+The definition of churn can vary based on the evaluation timeframe and therefore the time periods have to be parameterized inorder to accomadate changing business requirement. __Note: As a default, prior months is taken as 4 months and the churn evaluation timeperiod is taken as 3 month__
 
 The __second step__ is to engineer relevant features to address the prediction problem at hand. The raw event logs provides transactions snippets of information about the customer preferences and activity within the site. For the _churn problem_, I have envision three major types of features.
 
-1. __Basic Activity features__ :  These features are created from aggregating user activity for the last stipulated period of time(say 3 months). These features captures the activity of the user during a certain period of time and therefore can help in distinguishing loyal and active users from rest. This involves data about the number of visits, number of purchases, total purchase amount etc.
+1. __Basic Activity features__ :  These features are created from aggregating user activity for the last stipulated period of time(say 4 months). These features captures the activity of the user during a certain period of time and therefore can help in distinguishing loyal and active users from rest. This involves data about the number of visits, number of purchases, total purchase amount etc.
 
 Find below the complete list of features (Note: All features are created for a stipulated time):
 - nb_visits : Number of user activity
@@ -116,37 +120,20 @@ __Box Plots__ provides a nice visual representation of difference in distributio
 
 ![Box plot](/images/boxplot.PNG)
 
-__Tree Based models__ provides feature importance which can be potentially used to filter non informative feature. Find below the feature importance from __Random Forest__ model in the decreasing order 
+__Tree Based models__ provides feature importance which can be potentially used to filter non informative feature. Find below the top 10 feature importance from __Random Forest__ model in the decreasing order 
 
 | Features | Importance|
 | --- | --- |
-| nb_days_last_activity | 0.240502 |
-| nb_associated_months | 0.116341 |
-| nb_active_months | 0.091586 |
-| nb_visits | 0.089490 |
-| nb__distinct_products | 0.080761 |
-| nb_visits_last_month | 0.055770 |
-| nb_products_seen | 0.052468 |
-| nb_distinct_category1 | 0.043871 |
-| nb_distinct_category0 | 0.030447 |
-| nb_days_last_purchase | 0.028630 |
-| amount_purchase_total | 0.024445 |
-| nb_distinct_category2 | 0.022086 |
-| amount_purchase | 0.019904 |
-| nb_distinct_category0_last_month | 0.014828 |
-| nb_products_seen_last_month | 0.013427 |
-| nb_distinct_category2_last_month | 0.012472 |
-| nb_distinct_category1_last_month | 0.012168 |
-| nb__distinct_products_last_month | 0.010156 |
-| nb_active_purchase_months | 0.007856 |
-| amount_purchase_last_month | 0.007436 |
-| nb_purchase_total | 0.007378 |
-| nb_distinct_category_purchased | 0.005344 |
-| nb_purchase | 0.004290 |
-| nb_distinct_product_purchased | 0.003929 |
-| nb_purchase_last_month | 0.001503 |
-| nb_distinct_product_purchased_last_month | 0.001462 |
-| nb_distinct_category_purchased_last_month | 0.001449 |
+| nb_active_months | 0.177715 |
+| nb_days_last_activity | 0.121025 |
+| nb_visits | 0.102029 |
+| nb_distinct_category1 | 0.058217 |
+| nb_days_last_purchase | 0.05582 |
+| nb__distinct_products | 0.05526 |
+| amount_purchase | 0.054337 |
+| amount_purchase_total | 0.046802 |
+| nb_products_seen | 0.036346 |
+| nb_associated_months | 0.035496 |
 
 ## Modeling
 #### Logistic Regression Model
@@ -159,16 +146,18 @@ Tree based models like Random Forest and Tree based boosting models like AdaBoos
 Hyperparameter tuning is performed using 5-fold Cross Validation. Note: Only Adaboost model hyperparameters have been tuned 
 
 #### Results
-The XgBoost model is found to have the highest accuracy of 79.30% and high recall of 89.70%. 
+The XgBoost model is found to have the highest accuracy of 80.85% and high recall of 86.62% on test dataset. 
 
 | Model | TN | FP | FN | TP | Accuracy | Recall | Precision | AUC |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | 
-| Logistic Regression | 586 | 2699 | 134 | 5451 | 68.06% | 97.60% | 66.88% | 0.577 |
-| Random Forest | 2096 | 1189 | 949 | 4636 | 75.90% | 83.01% | 79.59% | 0.734 |
-| AdaBoost | 2114 | 1171 | 764 | 4821 | 78.18% | 86.32% | 80.46% | 0.753 |
-| XgBoost | 2024 | 1261 | 575 | 5010 | 79.30% | 89.70% | 79.89% | 0.757 |
+| Logistic Regression | 246 | 101 | 55 | 371 | 79.82% | 87.09% | 78.60% | 0.79 |
+| Random Forest | 261 | 86 | 63 | 363 | 80.72% | 85.21% | 80.85% | 0.80 | 
+| Adaboost | 260 | 87 | 78 | 348 | 78.65% | 81.69% | 80.00% | 0.78 |
+| XgBoost | 256 | 91 | 57 | 369 | 80.85% | 86.62% | 80.22% | 0.80 |
 
 
 
+## Deployment and Evaluation
+prediction.py is used to orchestrate monthly prediction in rolling basis. The ML model and necessary configuration are envisoned to be pickled and put in Amazon S3 datastore from which the model can be called when required. _(Note: Solutioning pending....)_
 
 

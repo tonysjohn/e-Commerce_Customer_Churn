@@ -332,7 +332,8 @@ def training_Churn(finalChurnDate, preInterval = 3, churnEvaluationPeriod = 1):
               AND events.event_timestamp >= TIMESTAMP '{finalChurnDate}'
                                    - INTERVAL '{churnEvaluationPeriod} months'
                                    - INTERVAL '{preInterval} months'
-              GROUP BY user_id) all_activity
+              GROUP BY user_id
+              HAVING amount_purchase > 35) all_activity
        LEFT JOIN
        (SELECT 
               user_id,
