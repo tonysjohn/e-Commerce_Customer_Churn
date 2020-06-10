@@ -144,8 +144,14 @@ A vanilla logistic regression model is found to perform poorly on the data. This
    ###### Transformation
    Yeo-Johnson transformation is implement along with standarization to decrease the skewness in the independent variables. This is found to improve the accuracy of the model but with degradation in recall.
 
+   The effect of standardization and yeo-Johnson transformation on __nb_visits__ can be seen below:
+   ![variable Transformation](/images/variableTransformation.PNG) 
+
 #### Tree Based Models
 Tree based models like Random Forest and Tree based boosting models like AdaBoost, XgBoost is found to be much better than logistic model.
+
+#### KNN Models
+KNN based model is also tuned for the data using grid search method. The best accuracy is found at neighbours = 24.
 
 #### Hyperparameter Tuning
 Hyperparameter tuning is performed using parameter grid search with 5-fold Cross Validation. 
@@ -159,8 +165,9 @@ The XgBoost model is found to have the highest accuracy of 80.85% and high recal
 | Random Forest | 261 | 86 | 63 | 363 | 80.72% | 85.21% | 80.85% | 0.80 | 
 | Adaboost | 260 | 87 | 78 | 348 | 78.65% | 81.69% | 80.00% | 0.78 |
 | XgBoost | 256 | 91 | 57 | 369 | 80.85% | 86.62% | 80.22% | 0.80 |
-
-
+| KNN | 233 | 99 | 61 | 380 | 79.30% | 86.17% | 79.33% | 0.78 |
+| Logistic Regression (LASSO with standarization) | 241 | 91 | 48 | 393 | 82.02% | 89.12% | 81.20% | 0.81 |
+| Logistic Regression (LASSO with standarization and yeo-johnson transformation) | 251 | 81 | 57 | 384 | 82.15% | 87.07% | 82.58% | 0.81 |
 
 ## Deployment and Evaluation
 prediction.py is used to orchestrate monthly prediction in rolling basis. The ML model and necessary configuration are envisoned to be pickled and put in Amazon S3 datastore from which the model can be called when required. _(Note: Solutioning pending....)_
