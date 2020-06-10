@@ -66,7 +66,7 @@ Find below the complete list of features (Note: All features are created for a s
 - amount_purchase : Amount purchased
 - nb_products_seen : Number of products seen by user
 - nb__distinct_products : number of distinct products seen by user
-- nb_distinct_category0 : number of distinct categories seen by user
+- nb_distinct_category0 : number of distinct categories seen by user    
 - nb_distinct_category1 : number of distinct sub-categories seen by user 
 - nb_distinct_category2 : number of distinct sub-categories seen by user
 - nb_distinct_product_purchased : number of distinct products purchased by user 
@@ -111,10 +111,9 @@ Since the categorical output, correlation matrix provides limited information ab
 
 | Var1 | Var2 | tvalue | pvalue |
 | --- | --- | --- | --- |
-| amount_purchase | no_activity_evaluation_period | 1.598413 | 0.109958 |
-| amount_purchase_last_month | no_activity_evaluation_period | 1.004236 | 0.315270 |
-| nb_purchase_total | no_activity_evaluation_period | 1.544840 | 0.122392 |
-| amount_purchase_total | no_activity_evaluation_period | 1.618743 | 0.105510 |
+| amount_purchase | no_activity_evaluation_period | 0.029773 | 0.976250 |
+| amount_purchase_last_month | no_activity_evaluation_period | 1.000859 | 0.317041 |
+| amount_purchase_total | no_activity_evaluation_period | 0.030682 | 0.975525 |
 
 __Box Plots__ provides a nice visual representation of difference in distribution between two groups
 
@@ -137,13 +136,19 @@ __Tree Based models__ provides feature importance which can be potentially used 
 
 ## Modeling
 #### Logistic Regression Model
-A vanilla logistic regression model is found to perform poorly on the data. This is as expected due to the strong assumptions behind a linear model. As seen in EDA, we need to perform feature transformations and analyze interactions in data to properly tune the model. _(Note: Solutioning pending....)_
+A vanilla logistic regression model is found to perform poorly on the data. This is as expected due to the strong assumptions behind a linear model. As seen in EDA, we need to perform feature transformations and analyze interactions in data to properly tune the model.
+   ###### LASSO
+   Adding L1 regularization (LASSO) to the cost function helps reduce the variance of the model by adding a small bias. This greatly increases the performance of the model during high colinearity between independent variables. Using L1 regularization with a C=1, is found to improve the model accuracy/recall. 
+   ###### Standarization
+   Linear models perform better when the independent variables are are in similar scales and has normal distribution. Standarization is found to improve the model accuracy by ~3%.
+   ###### Transformation
+   Yeo-Johnson transformation is implement along with standarization to decrease the skewness in the independent variables. This is found to improve the accuracy of the model but with degradation in recall.
 
 #### Tree Based Models
 Tree based models like Random Forest and Tree based boosting models like AdaBoost, XgBoost is found to be much better than logistic model.
 
 #### Hyperparameter Tuning
-Hyperparameter tuning is performed using 5-fold Cross Validation. Note: Only Adaboost model hyperparameters have been tuned 
+Hyperparameter tuning is performed using parameter grid search with 5-fold Cross Validation. 
 
 #### Results
 The XgBoost model is found to have the highest accuracy of 80.85% and high recall of 86.62% on test dataset. 
